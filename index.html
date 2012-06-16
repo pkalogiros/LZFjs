@@ -7,7 +7,7 @@
 
 		<script type="text/javascript" src="https://raw.github.com/eligrey/BlobBuilder.js/master/BlobBuilder.min.js"></script>
 		<script type="text/javascript" src="https://raw.github.com/eligrey/FileSaver.js/master/FileSaver.min.js"></script>
-
+		<title>LZF in Javascript</title>
 		<style>
 			body{
 				padding:0;
@@ -179,6 +179,13 @@
 			<div id="appWindow2">
 				DECOMPRESSOR
 			</div>
+
+			<div class="spacer"></div>
+			<h2>How and why</h2>
+			<p>Based on <a href="http://oldhome.schmorp.de/marc/liblzf.html" target="_blank">LibLZF</a> by Marc Alexander Lehmann <br /><br /> github: <a href="https://github.com/pkalogiros/LZFjs" target="_blank">https://github.com/pkalogiros/LZFjs</a></p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://lzf.childnodes.com/">Tweet</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 			
 		</div>
 		
@@ -313,7 +320,7 @@
 							
 							if( entered <= 0 )
 							{
-								overlay.className = overlay.className.replace( ' ' + clss, '' );
+								overlay.className = '';
 								entered = 0;
 							}
 						},
@@ -325,7 +332,7 @@
 							events.silencer( e );
 							
 							// Hide the overlay
-							overlay.className = overlay.className.replace( ' ' + clss, '' );
+							overlay.className = '';
 							entered = 0;
 							
 							/** dropped files. **/
