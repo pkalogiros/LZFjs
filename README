@@ -1,0 +1,4 @@
+An attempt at fast binary compression and decompression performed in Javascript based on LZF ( http://oldhome.schmorp.de/marc/liblzf.html )
+
+For an online demo, please see
+http://lzf.childnodes.com/
