@@ -20,7 +20,8 @@
  (function( parent ) {
 	parent = parent || window;
 	
-	// opera arraybuffer.slice shim
+	// opera arraybuffer.slice shim - doesnot actually works as expected but at least the script progresses
+	// without breaking.
 	if( window.opera )
 		ArrayBuffer.prototype.slice=function(a,b) {
 			return new Uint8Array(this).subarray(a,b).buffer;
