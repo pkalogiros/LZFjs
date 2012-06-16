@@ -20,6 +20,12 @@
  (function( parent ) {
 	parent = parent || window;
 	
+	// opera arraybuffer.slice shim
+	if( window.opera )
+		ArrayBuffer.prototype.slice=function(a,b) {
+			return new Uint8Array(this).subarray(a,b).buffer;
+		};
+	
 	// class constants
 	var _HLOG = 16,
 		_HSIZE = ( 1 << ( _HLOG ) ),
