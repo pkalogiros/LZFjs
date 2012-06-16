@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-7">
+	
+		<script type="text/javascript" src="lzf.js"></script> 
+
+		<script type="text/javascript" src="https://raw.github.com/eligrey/BlobBuilder.js/master/BlobBuilder.min.js"></script>
+		<script type="text/javascript" src="https://raw.github.com/eligrey/FileSaver.js/master/FileSaver.min.js"></script>
+
+		<style>
+			body{
+				padding:0;
+				margin:0;
+				font-family:Helvetica, Arial;
+				color:#444;
+			}
+			a{
+				font-weight:bold;
+				text-decoration:none;
+			}
+			a:active,
+			a:visited{
+				color:#F79665;
+				font-weight:bold;
+				text-decoration:none;
+			}
+			a:hover{
+				color:#666;
+			}
+			*:after, *:before{ user-select:none; -webkit-user-select:none; -moz-user-select:none; }
+			ul, ul li{ list-style:none; }
+			li:before{
+				content: '<li>';
+				color:#aaa;
+			}
+			li:after{
+				content: '</li>';
+				color:#aaa;
+			}
+			h2:before{
+				content: '<h2>';
+				color:#aaa;
+				font-size:13px;
+				font-weight:normal;
+			}
+			h2:after{
+				content: '</h2>';
+				color:#aaa;
+				font-size:13px;
+				font-weight:normal;
+			}
+			p:before, p:after{
+				color:#aaa;
+				content:'<p>';
+			}
+			p:after{ content:'</p>'; }
+			iframe{
+				outline:0;
+				box-shadow:0 5px 7px -1px #443333;
+				float:left;
+				border:0;
+				background:black;
+				width:350px;
+				height:240px;
+				margin:20px 35px;
+			}
+			#old, #new{
+				width:350px;
+				min-height:20px;
+				margin:20px 35px 10px;
+				float:left;
+				text-shadow:0 1px 1px #f9f9f9;
+			}
+			#old:before{
+				content:'Existing. ';
+			}
+			#new:before{
+				content:'Edited. ';
+			}
+			.region{
+				overflow:hidden;
+				width:880px;
+				margin:0 auto 30px;
+				border:1px solid #d8d8d8;
+				padding:40px;
+				font-size:13px;
+				box-shadow:0 4px 10px #998888;
+				text-shadow:0 1px 1px #f9f9f9;
+				background: #fcfcfc;
+				background: -moz-linear-gradient(top,  #fcfcfc 1%, #ededed 100%);
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#fcfcfc), color-stop(100%,#ededed));
+				background: -webkit-linear-gradient(top,  #fcfcfc 1%,#ededed 100%);
+				background: -o-linear-gradient(top,  #fcfcfc 1%,#ededed 100%);
+				background: -ms-linear-gradient(top,  #fcfcfc 1%,#ededed 100%);
+				background: linear-gradient(top,  #fcfcfc 1%,#ededed 100%);
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 );
+			}
+			::-moz-selection{
+				background: #DCDEF2;
+				color: #85796D;
+			} 
+
+			::selection {
+				background: #DCDEF2;
+				color: #85796D;
+			}
+
+			pre ::-moz-selection{
+				background: #f3f3f3;
+				color: #002277;
+			} 
+
+			pre ::selection {
+				background: #f3f3f3;
+				color: #002277;
+			}
+			h1{
+				padding:25px 0 30px 0;
+				margin:0 auto;
+				font-family:Helvetica, Arial;
+				width:960px;
+				
+				color:white;
+				text-shadow:0 1px 10px #d2d2d2;
+				font-size:40px;
+			}
+			h2{ margin:0; font-size:17px; }
+			p{
+				padding-bottom:15px;
+			}
+			.clear{
+				clear:both;
+				height:1px;
+			}
+			.spacer{
+				height:50px;
+			}
+			#appWindow2.__fadingIn,
+			#appWindow.__fadingIn{
+				background-color:#404040;
+			}
+			#appWindow2,
+			#appWindow{
+				width:100%;
+				height:170px;
+				border-radius:8px;
+				border:1px solid #676767;
+				background-color:gray;
+				
+				-webkit-transition:background-color 200ms;
+				-moz-transition:background-color 200ms;
+				-o-transition:background-color 200ms;
+				-ms-transition:background-color 200ms;
+				-ms-transition:background-color 200ms;
+				
+				font-size:85px;
+				color:rgba( 0, 0, 0, 0);
+				text-shadow:1px 1px 20px #949494;
+				text-align:center;
+				padding-top:80px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>LZF in JS</h1>
+		
+		<div class="region">
+			<h2>LZF Compression in Javascript</h2>
+			<p>Drop some files in the box below</p>
+			<div id="appWindow">
+				COMPRESSOR
+			</div>
+			
+			<div class="spacer"></div>
+			
+			<h2>Decompression</h2>
+			<p>Same as above : ) </p>
+			<div id="appWindow2">
+				DECOMPRESSOR
+			</div>
+			
+		</div>
+		
+		<script type="text/javascript">
+			function Compress( e, name ) {	
+				var bb = new BlobBuilder();
+
+				bb.append( LZF.compress( e ) );
+				var blob = bb.getBlob("example/binary");
+				saveAs( blob, name + ".compressed" );
+				
+				return false;
+			}
+			
+			function Decompress( e, name ) {	
+				var bb = new BlobBuilder();
+
+				bb.append( LZF.decompress( e ) );
+				var blob = bb.getBlob("example/binary");
+				
+				name = name.replace(".compressed","");
+				saveAs( blob, name );
+				
+				return false;
+			}
+			
+			function readFile( file, callback, method ) {
+				var reader = new FileReader();
+
+				/** Error handler (throws error at the console) **/
+				reader.onerror = function( e ) {
+					var message,
+						lut = [ "File not found.", "File coulnot be opened",  
+							"File couldnot be uploaded", "Couldnot read File", "File too large" ];
+					// http://www.w3.org/TR/FileAPI/#ErrorDescriptions
+					throw( lut[ ( e.target.error.code - 1 ) ] );
+					return false;
+				},
+				/** Success, calling the callback **/
+				reader.onloadend = function( e ) {
+					callback && callback( e.target.result, file.name );
+				};
+				
+				// the method is specified in the beginning of the file
+				reader[ method ]( file );
+				return false;
+			}
+
+			/**
+			*	Drag n Drop Files module
+			*	@param	HTML BODY Element, should be the B
+			*	@param	DOMElement/String, if a string is specified then a div will be built and appended to the body
+			*			with that String as its id. If a dom element is passed, that will be used instead
+			*	@param	Function,	will be called with the file data as its argument
+			*	@param	String,	possible values "text, binarytext, arrabuffer" decides how the file will be read
+			*			if let null, defaults to text
+			*
+			*	@author:	Pantelis Kalogiros
+			**/
+			function dragNDrop( body, overlay_id, callback, method ) {
+				var win = window;
+				// check to see if we are using a mobile device - no need for dragNdrop in devices
+				// that do not support it
+				if( ( 'ontouchstart' in window ) )
+					return "mobile";
+				
+					/** JS Object, used to define the file-reading method **/
+				var method_lut = {
+						'text'		 :	'readAsText',
+						'binary'	 :	'readAsBinaryText',
+						'arrayBuffer':	'readAsArrayBuffer'
+					},
+					/** class added/removed from overlay object **/
+					clss = "__fadingIn",
+					method = method ? method_lut[ method ] : 'readAsText',
+					/** how many events cast (dragenter/dragleave) **/
+					entered = 0,
+					/** 
+					* DOMElement sink for the drag events 
+					* if left unspecified then the body inherits the role
+					**/
+					overlay = !!overlay_id ? overlay_id : body,
+					/**
+					*	(void) if the overlay_id specified is a string, then a div with that id is built
+					*	and appended to the body. Else the default is used
+					**/
+					_overlayBuilder = function() {
+						if( typeof overlay_id === "string"  )
+						{
+							var tmp = document.createElement( 'div' );
+							overlay = document.createElement( 'div' );
+							overlay.id = overlay_id;
+							
+							tmp.innerHTML = "Drag n drop Files!";
+							overlay.appendChild( tmp );
+
+							body.appendChild( overlay );
+							tmp = null;
+						}
+					},
+					/**
+					*	JS Object
+					*	The events Object contains various functions that control 
+					*	the behavior of the events fired
+					**/
+					events = {
+						/**
+						*	(void) Prevents default action and bubbling up
+						**/
+						silencer	:	function( e ) {
+							e.preventDefault();
+							e.stopPropagation()
+						},
+						
+						/**
+						*	Shows message to drop file
+						**/
+						onDragEnter	:	function( e ) {
+							overlay.className += " " + clss;
+							++entered;
+							
+							setTimeout(function() {
+								if( entered > 1 )
+									entered = 1;
+							}, 10 )
+						},
+						/**
+						*	Hides the overlay... twist included!
+						**/
+						onDragLeave	:	function( e ) {
+							--entered;
+							
+							if( entered <= 0 )
+							{
+								overlay.className = overlay.className.replace( ' ' + clss, '' );
+								entered = 0;
+							}
+						},
+						/**
+						* Files dropped
+						**/
+						onDrop	:	function( e ) {
+							// prevent the event from bubbling/firing default
+							events.silencer( e );
+							
+							// Hide the overlay
+							overlay.className = overlay.className.replace( ' ' + clss, '' );
+							entered = 0;
+							
+							/** dropped files. **/
+							var files = e.dataTransfer.files,
+								len;
+							
+							// If anything is wrong with the dropped files, exit.
+							if(	!files || !files.length )
+								return false;
+							
+							len = files.length;
+							while( len-- )
+								// iterate files array and load them
+								readFile( files[ len ], callback, method );
+						}
+					};
+				
+				(function init() {
+					_overlayBuilder();
+					// events initialization
+					body.addEventListener( "dragenter", events.onDragEnter, false );
+					overlay.addEventListener( "dragleave", events.onDragLeave, false );
+					overlay.addEventListener( "dragover", events.silencer, false);
+					overlay.addEventListener( "drop", events.onDrop, false);
+					return false;
+				})( body );
+			};
+			
+			dragNDrop( document.getElementById('appWindow'), null, Compress, "arrayBuffer" );
+			dragNDrop( document.getElementById('appWindow2'), null, Decompress, "arrayBuffer" );
+
+		</script>
+	</body>
+</html>
