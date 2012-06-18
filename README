@@ -2,3 +2,6 @@ An attempt at fast binary compression and decompression performed in Javascript 
 
 For an online demo, please see
 http://lzf.childnodes.com/
+
+Browser support,
+Firefox, Google Chrome, Opera, Safari (but only with direct ArrayBuffers since Safari doesnot support the file-api yet)
