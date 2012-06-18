@@ -135,11 +135,8 @@
 			
 			if( !hasSize )
 			{
-				var ll = aRes.length,
-				ret = new Uint8Array( ll );
-				
-				for( var n = 0; n < ll; ++n )
-					ret[ n ] = aRes[ n ];
+				var ret = new Uint8Array( aRes.length );
+				ret.set( aRes );
 				
 				return ret.buffer;
 			}
@@ -158,7 +155,7 @@
 			var sD = new Uint8Array( inputBuffer ),
 				htab = [],
 				iEnd = sD.byteLength,
-				aRes = new Uint8Array( iEnd ),
+				aRes = [],
 				ip = 0,
 				op = 1,
 				lit = 0,
@@ -269,19 +266,11 @@
 				aRes[ op - lit - 1 ] = ( lit - 1 ) & 255;
 				
 			if( includeSize )
-			{
-				var ret = new Uint8Array( op + 4 ),
-					end = new Uint32Array( 1 ),
-					cut = new Uint8Array( aRes.buffer.slice( 0, op ) );
-				end[0] = iEnd;
-				ret.set( end, 0 );
-				ret.set( cut, 4 );
+				aRes.unshift( aRes.length );
 
-				end = cut = null;
-				return ret.buffer;
-			}
-			
-			return aRes.buffer.slice( 0, op );
+			var ret = new Uint8Array( aRes.length );
+			ret.set( aRes );
+			return ret.buffer;
 		}
 	};	
  })( window ); // <-- your object here
