@@ -20,12 +20,17 @@
  (function( parent ) {
 	parent = parent || window;
 	
-	// opera arraybuffer.slice shim
-	if( window.opera )
-		ArrayBuffer.prototype.slice=function(a,b) {
-			var e=new Uint8Array(this).subarray(a,b),c=new Uint8Array(b-a).set(e);
-			return c.buffer
-		};
+	// ArrayBuffer.slice shim
+        if( ArrayBuffer && !ArrayBuffer.prototype.slice )
+	    ArrayBuffer.prototype.slice = function(a, b) {
+		var e = new Uint8Array( this ), c;
+		!a && ( a = 0 );
+		!b && ( b = this.byteLength );
+		e = e.subarray( a, b );
+		c = new Uint8Array( b - a );
+		c.set( e );
+		return c.buffer;
+	    };
 	
 	// class constants
 	var _HLOG = 16,
