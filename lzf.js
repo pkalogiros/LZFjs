@@ -18,6 +18,7 @@
  */
  
  (function( parent ) {
+ 	"use strict";
 	parent = parent || window;
 	
 	// ArrayBuffer.slice shim
